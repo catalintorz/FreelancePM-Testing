@@ -1,0 +1,260 @@
+﻿@page
+@model FreelancePM.Pages.Projects.IndexModel
+
+@{
+    ViewData["Title"] = "Projects";
+}
+
+<h1>Projects</h1>
+
+<!-- Create Button -->
+<a asp-page="Create" class="btn btn-outline-dark mb-3">
+    ➕ Create Project
+</a>
+<br/>
+
+<!-- FILTER -->
+<div class="mb-3 d-flex justify-content-between align-items-end">
+
+    <form method="get" class="d-flex gap-2 align-items-end">
+
+        <!-- SEARCH -->
+        <div>
+            <label class="form-label">Search</label>
+            <input type="text"
+                   name="SearchTerm"
+                   value="@Model.SearchTerm"
+                   class="form-control"
+                   placeholder="Search project..." />
+        </div>
+
+        <!-- CLIENT DROPDOWN -->
+        <div>
+            <label class="form-label">Client</label>
+            <select name="FilterClientId"
+                    class="form-select">
+                <option value="">📁 All clients</option>
+                @foreach (var client in Model.ClientsList)
+                {
+                    <option value="@client.Value"
+                            selected="@(client.Value == Model.FilterClientId?.ToString())">
+                        @client.Text
+                    </option>
+                }
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary mb-1">
+            🔍 Filter
+        </button>
+
+        <a asp-page="./Index"
+           class="btn btn-outline-secondary mb-1">
+            ♻ Reset
+        </a>
+
+    </form>
+</div>
+
+
+
+
+<!-- PROJECTS TABLE -->
+<table class="table table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Name</th>
+            <th>Client</th>
+            <th>Period</th>
+            <th>Progress</th>
+            <th>Tasks</th>
+            <th>Budget</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var project in Model.Project)
+        {
+            <tr>
+                @{
+                    // 1️ Total task-uri din proiect
+                    var totalTasks = project.WorkTasks?.Count ?? 0;
+
+                    // 2️ Task-uri finalizate (Status = Completed)
+                    var completedTasks = project.WorkTasks?
+                    .Count(t => t.Status != null && t.Status.Name == "Completed") ?? 0;
+
+                    // 3️ Task-uri overdue (deadline trecut + nu sunt completed)
+                    var overdueTasks = project.WorkTasks?
+                    .Count(t =>
+                    t.Deadline < DateTime.Today &&
+                    t.Status != null &&
+                    t.Status.Name != "Completed"
+                    ) ?? 0;
+
+                    // 4️ Progres procentual
+                    var progress = totalTasks > 0
+                    ? (int)((double)completedTasks / totalTasks * 100)
+                    : 0;
+                }
+
+
+                <!-- Name -->
+                <td class="fw-semibold">
+                    @project.Name
+                </td>
+
+                <!-- Client -->
+                <td>
+                    <span class="badge bg-secondary">
+                        @project.Client?.Name
+                    </span>
+                </td>
+
+                <!-- Period -->
+                <td>
+                    <div>
+                        <small class="text-muted">
+                            @project.StartDate.ToString("dd/MM/yyyy")
+                            →
+                            @project.Deadline.ToString("dd/MM/yyyy")
+                        </small>
+                    </div>
+                </td>
+
+                <!-- Progress -->
+
+                <td style="min-width:160px">
+                    @if (totalTasks > 0)
+                    {
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-success"
+                                 role="progressbar"
+                                 style="width:@progress%">
+                                @progress%
+                            </div>
+                        </div>
+
+                        <small class="text-muted">
+                            @completedTasks / @totalTasks completed
+                        </small>
+                    }
+                    else
+                    {
+                        <span class="text-muted">No tasks</span>
+                    }
+                </td>
+
+
+                <!-- TASKS -->
+                <td>            
+                    @if (totalTasks > 0)
+                    {
+                        <div class="d-flex gap-1 flex-wrap">
+
+                            <!-- TOTAL -->
+                            <a asp-page="/ProjectTasks/Index"
+                               asp-route-FilterProjectId="@project.Id"
+                               class="badge bg-info text-dark text-decoration-none">
+                                📋 @totalTasks
+                            </a>
+
+                            <!-- OVERDUE -->
+                            @if (overdueTasks > 0)
+                            {
+                                <span class="badge bg-danger">
+                                    ⏰ @overdueTasks overdue
+                                </span>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">0</span>
+                    }
+                </td>
+
+
+                <!-- Budget -->
+                <td>
+                    @if (project.Budget > 0)
+                    {
+                        <span class="badge bg-info text-dark">
+                            @project.Budget.ToString("0.00") €
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="text-muted">—</span>
+                    }
+                </td>
+
+                <!-- Actions -->
+                <td>
+                    <div class="btn-group btn-group-sm" role="group">
+
+                        <a asp-page="./Edit"
+                           asp-route-id="@project.Id"
+                           class="btn btn-outline-primary">
+                            ✏ Edit
+                        </a>
+
+                        <a asp-page="./Details"
+                           asp-route-id="@project.Id"
+                           class="btn btn-outline-secondary">
+                            🔍 Details
+                        </a>
+
+                        <button type="button"
+                                class="btn btn-outline-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteModal-@project.Id">
+                            🗑 Delete
+                        </button>
+                    </div>
+
+                    <!-- DELETE MODAL -->
+                    <div class="modal fade"
+                         id="deleteModal-@project.Id"
+                         tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title">
+                                        Confirm Delete
+                                    </h5>
+                                    <button type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    Are you sure you want to delete project
+                                    <strong>@project.Name</strong>?
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button"
+                                            class="btn btn-secondary"
+                                            data-bs-dismiss="modal">
+                                        Cancel
+                                    </button>
+
+                                    <a asp-page="./Delete"
+                                       asp-route-id="@project.Id"
+                                       class="btn btn-danger">
+                                        Delete
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

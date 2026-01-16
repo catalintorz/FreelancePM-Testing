@@ -1,0 +1,156 @@
+﻿@page
+@model FreelancePM.Pages.Dashboard.IndexModel
+@{
+}
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1>Dashboard</h1>
+
+<!-- Welcome Text -->
+<div class="mb-4">
+    <h4 class="fw-light">
+        👋 @Model.Greeting,
+        <span class="fw-semibold">@Model.Username</span>
+    </h4>
+
+
+    <p class="text-muted">
+        Here's a quick overview of your freelance activity.
+    </p>
+</div>
+
+
+<!-- Carudir Taskuri -->
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Clienți</h5>
+                <p class="card-text display-4">@Model.ClientsCount</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Proiecte</h5>
+                <p class="card-text display-4">@Model.ProjectsCount</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Taskuri</h5>
+                <p class="card-text display-4">@Model.TasksCount</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-danger mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Taskuri Active</h5>
+                <p class="card-text display-4">@Model.ActiveTasksCount</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <h4>Taskuri cu deadline în următoarele 7 zile</h4>
+        @if (Model.UpcomingTasks.Count == 0)
+        {
+            <p>Nu există taskuri cu deadline în următoarele 7 zile.</p>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Titlu</th>
+                        <th>Proiect</th>
+                        <th>Status</th>
+                        <th>Deadline</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var task in Model.UpcomingTasks)
+                    {
+                        <tr>
+                            <td>@task.Title</td>
+                            <td>@task.Project?.Name</td>
+                            <td>@task.Status?.Name</td>
+                            <td>@task.Deadline.ToString("dd/MM/yyyy")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Taskuri pe Status</h4>
+        <canvas id="tasksDoughnutChart" width="400" height="400"></canvas>
+    </div>
+    <div class="col-md-6">
+        <h4>Taskuri pe Proiect</h4>
+        <canvas id="tasksBarChart" width="400" height="400"></canvas>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Doughnut chart – Taskuri pe Status
+        const ctxDoughnut = document.getElementById('tasksDoughnutChart').getContext('2d');
+        const tasksDoughnutChart = new Chart(ctxDoughnut, {
+            type: 'doughnut',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.StatusLabels)),
+                datasets: [{
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.StatusValues)),
+                    backgroundColor: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.StatusColors)),
+                    borderColor: 'rgba(255,255,255,1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: { callbacks: { label: function(context) { return context.label + ': ' + context.raw; } } }
+                }
+            }
+        });
+
+        // Bar chart – Taskuri pe Proiect
+        const ctxBar = document.getElementById('tasksBarChart').getContext('2d');
+        const tasksBarChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ProjectLabels)),
+                datasets: [{
+                    label: 'Număr Taskuri',
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ProjectValues)),
+                    backgroundColor: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ProjectColors)),
+                    borderColor: 'rgba(0,0,0,1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { beginAtZero: true, precision: 0 } },
+                plugins: { legend: { display: false } }
+            }
+        });
+    </script>
+}

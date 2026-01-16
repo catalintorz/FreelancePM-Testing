@@ -1,0 +1,219 @@
+﻿@page
+@model FreelancePM.Pages.ProjectTasks.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Project Tasks</h1>
+
+<div class="mb-3">
+    <a asp-page="Create" class="btn btn-outline-dark">
+        ➕ Create Task
+    </a>
+</div>
+
+<!-- Search By Title -->
+<div class="col-md-4">
+    <label class="form-label">Search</label>
+    <input type="text"
+           name="SearchTerm"
+           value="@Model.SearchTerm"
+           class="form-control"
+           placeholder="Search by title..." />
+</div>
+
+<br/>
+
+<!-- BARA FILTRARE -->
+<div class="card mb-3 shadow-sm">
+    <div class="card-body py-2">
+        <form method="get">
+            <div class="row g-2 align-items-center">
+
+                <!-- Proiect -->
+                <div class="col-md-4">
+                    <select asp-for="FilterProjectId"
+                            class="form-select form-select-sm"
+                            asp-items="Model.ProjectsList">
+                        <option value="">📁 All Projects</option>
+                    </select>
+                </div>
+
+                <!-- Status -->
+                <div class="col-md-4">
+                    <select asp-for="FilterStatusId"
+                            class="form-select form-select-sm"
+                            asp-items="Model.StatusesList">
+                        <option value="">🏷️ All Statuses</option>
+                    </select>
+                </div>
+
+                <!-- Butoane -->
+                <div class="col-md-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary btn-sm w-100">
+                        🔍 Filter
+                    </button>
+
+                    <a asp-page="./Index"
+                       class="btn btn-outline-secondary btn-sm w-100">
+                        ♻ Reset
+                    </a>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- TABEL TASKURI -->
+<table class="table table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Title</th>
+            <th>Project</th>
+            <th>Status</th>
+            <th>
+                <a asp-page="./Index"
+                   asp-route-SortOrder="@(Model.SortOrder == "deadline_desc" ? "" : "deadline_desc")"
+                   asp-route-FilterProjectId="@Model.FilterProjectId"
+                   asp-route-FilterStatusId="@Model.FilterStatusId"
+                   class="text-decoration-none">
+                    Deadline
+                    @(Model.SortOrder == "deadline_desc" ? "▼" : "▲")
+                </a>
+            </th>
+            <th></th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Model.WorkTask)
+        {
+            <!-- Colorare in rosu a taskurilor cu deadline overdue -->
+            bool isOverdue = task.Deadline.Date < DateTime.Today && task.Status?.Name != "Completed";
+            <tr class="@(isOverdue ? "table-danger" : "")"> 
+                <td>
+                    @task.Title
+                    <!-- Badge Overdue Langa Titlu -->
+                    @if (isOverdue)
+                    {
+                        <span class="badge bg-danger ms-2">
+                            Overdue
+                        </span>
+                    }
+                </td>
+
+                <td>
+                    @task.Project?.Name
+                    <br />
+                    <small class="text-muted">@task.Project?.Client?.Name</small>
+                </td>
+
+                <td> <!-- Colorare automata Badge -->
+                    @{
+                        var statusName = task.Status?.Name ?? "";
+                        var badgeClass = "bg-secondary";
+
+                        if (statusName == "Completed")
+                        {
+                            badgeClass = "bg-success";
+                        }
+                        else if (statusName == "In Progress")
+                        {
+                            badgeClass = "bg-warning text-dark";
+                        }
+                        else if (statusName == "Overdue")
+                        {
+                            badgeClass = "bg-danger";
+                        }
+                    }
+                    <span class="badge @badgeClass">
+                        @statusName
+                    </span>
+                </td>
+
+                <td>@task.Deadline.ToString("dd/MM/yyyy")</td>
+
+                <td> <!-- IsCompleted Button -->
+                    @if (task.Status?.Name != "Completed")
+                    {
+                        <form method="post"
+                              asp-page-handler="Complete"
+                              asp-route-id="@task.Id"
+                              class="d-inline">
+                            <button type="submit"
+                                    class="btn btn-outline-success btn-sm">
+                                ✔ Mark as Completed
+                            </button>
+                        </form>
+                    } else
+                    {
+                        <span class="text-success fw-semibold">
+                            ✔ Done
+                        </span>
+                    }
+                </td>
+
+                <td>
+
+                    <div class="btn-group btn-group-sm" role="group">
+                        <a asp-page="./Edit"
+                           asp-route-id="@task.Id"
+                           class="btn btn-outline-@(isOverdue ? "danger" : "primary")">
+                            ✏ Edit
+                        </a>
+
+                        <a asp-page="./Details"
+                           asp-route-id="@task.Id"
+                           class="btn btn-outline-secondary">
+                            🔍 Details
+                        </a>
+
+                        <button type="button"
+                                class="btn btn-outline-danger btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteModal-@task.Id">
+                            🗑 Delete
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="deleteModal-@task.Id" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Confirm Delete</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        Are you sure you want to delete task
+                                        <strong>@task.Title</strong>?
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button"
+                                                class="btn btn-secondary"
+                                                data-bs-dismiss="modal">
+                                            Cancel
+                                        </button>
+
+                                        <a asp-page="./Delete"
+                                           asp-route-id="@task.Id"
+                                           class="btn btn-danger">
+                                            Delete
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,168 @@
+﻿@page
+@model FreelancePM.Pages.Clients.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Clients</h1>
+
+<!-- Create Button -->
+<a asp-page="Create" class="btn btn-outline-dark">
+    ➕ Create Client
+</a>
+<br/>
+<div class="mb-3 d-flex justify-content-between align-items-end">   
+    <!-- Search -->
+    <form method="get" class="d-flex gap-2">
+        <input type="text"
+               name="SearchTerm"
+               value="@Model.SearchTerm"
+               class="form-control"
+               placeholder="Search by name or company..." />
+
+        <button type="submit" class="btn btn-primary">
+            🔍 Search
+        </button>
+
+        <a asp-page="./Index" class="btn btn-outline-secondary">
+            ♻ Reset
+        </a>
+    </form>
+</div>
+
+<!-- TABEL CLIENTI -->
+<table class="table table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Company</th>
+            <th>Projects Count</th>
+            <th>Notes</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var client in Model.Client)
+        {
+            <tr>
+                <!-- Name -->
+                <td class="fw-semibold">
+                    @client.Name
+                </td>
+
+                <!-- Contact -->
+                <td>
+                    <div>@client.Email</div>
+                    <small class="text-muted">@client.Phone</small>
+                </td>
+
+                <!-- Company -->
+                <td>
+                    @if (!string.IsNullOrEmpty(client.Company))
+                    {
+                        <span class="badge bg-secondary">
+                            @client.Company
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="text-muted">—</span>
+                    }
+                </td>
+
+                <!-- Projects Count -->
+                <td>
+                    @if (client.Projects != null && client.Projects.Count > 0)
+                    {
+                        <a asp-page="/Projects/Index"
+                           asp-route-FilterClientId="@client.Id"
+                           class="badge bg-info text-dark text-decoration-none">
+                            @client.Projects.Count project(s)
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">0</span>
+                    }
+                </td>
+
+                <!-- Notes -->
+                <td class="text-muted">
+                    @(string.IsNullOrEmpty(client.Notes) ? "—" : client.Notes)
+                </td>
+
+                <!-- Actions -->
+                <td>
+                    <div class="btn-group btn-group-sm" role="group">
+
+                        <!-- View Projects -->
+                        <a asp-page="/Projects/Index"
+                           asp-route-FilterClientId="@client.Id"
+                           class="btn btn-outline-dark">
+                            📁 Projects
+                        </a>
+
+                        <a asp-page="./Edit"
+                           asp-route-id="@client.Id"
+                           class="btn btn-outline-primary">
+                            ✏ Edit
+                        </a>
+
+                        <a asp-page="./Details"
+                           asp-route-id="@client.Id"
+                           class="btn btn-outline-secondary">
+                            🔍 Details
+                        </a>
+
+                        <button type="button"
+                                class="btn btn-outline-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteModal-@client.Id">
+                            🗑 Delete
+                        </button>
+                    </div>
+
+                    <!-- DELETE MODAL -->
+                    <div class="modal fade"
+                         id="deleteModal-@client.Id"
+                         tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Confirm Delete</h5>
+                                    <button type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    Are you sure you want to delete client
+                                    <strong>@client.Name</strong>?
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button"
+                                            class="btn btn-secondary"
+                                            data-bs-dismiss="modal">
+                                        Cancel
+                                    </button>
+
+                                    <a asp-page="./Delete"
+                                       asp-route-id="@client.Id"
+                                       class="btn btn-danger">
+                                        Delete
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
