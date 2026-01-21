@@ -2,60 +2,72 @@
 @model FreelancePM.Pages.Projects.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Project Details";
 }
 
-<h1>Details</h1>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
 
-<div>
-    <h4>Project</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Project.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Project.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Project.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Project.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Project.StartDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Project.StartDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Project.Deadline)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Project.Deadline)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Project.Budget)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Project.Budget)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Project.Client)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Project.Client.Email)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Project.User)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Project.User.Id)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-page="./Edit" asp-route-id="@Model.Project.Id">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+            <h1 class="mb-1">Project Details</h1>
+            <p class="text-muted mb-4">View project information.</p>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 text-muted">Name</dt>
+                        <dd class="col-sm-8">@Model.Project.Name</dd>
+
+                        <dt class="col-sm-4 text-muted">Description</dt>
+                        <dd class="col-sm-8">
+                            @(string.IsNullOrWhiteSpace(Model.Project.Description)
+                                                        ? "-"
+                                                        : Model.Project.Description)
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">Start date</dt>
+                        <dd class="col-sm-8">
+                            @Model.Project.StartDate.ToString("dd/MM/yyyy")
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">Deadline</dt>
+                        <dd class="col-sm-8">
+                            @Model.Project.Deadline.ToString("dd/MM/yyyy")
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">Budget</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Project.Budget > 0)
+                            {
+                                @Model.Project.Budget.ToString("0.00") <text> €</text>
+                            }
+                            else
+                            {
+                                <text>-</text>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">Client</dt>
+                        <dd class="col-sm-8">
+                            @Model.Project.Client?.Email
+                        </dd>
+                    </dl>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-page="./Index" class="btn btn-outline-secondary">
+                            Back to list
+                        </a>
+                        <a asp-page="./Edit"
+                           asp-route-id="@Model.Project.Id"
+                           class="btn btn-primary">
+                            Edit
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>

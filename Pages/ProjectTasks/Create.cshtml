@@ -1,60 +1,77 @@
 ﻿@page
 @model FreelancePM.Pages.ProjectTasks.CreateModel
 
-        @{
-        ViewData["Title"] = "Create";
-        }
-        
-        <h1>Create</h1>
-        
-    <h4>WorkTask</h4>
-    <hr />
-    <div class="row">
-    <div class="col-md-4">
-    <form method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <span class="text-danger">*</span>
-                <label asp-for="WorkTask.Title" class="control-label"></label>
-                <input asp-for="WorkTask.Title" class="form-control" aria-required="true"/>
-                <span asp-validation-for="WorkTask.Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="WorkTask.Description" class="control-label"></label>
-                <input asp-for="WorkTask.Description" class="form-control" />
-                <span asp-validation-for="WorkTask.Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <span class="text-danger">*</span>
-                <label asp-for="WorkTask.Deadline" class="control-label"></label>
-                <input asp-for="WorkTask.Deadline" class="form-control" aria-required="true"/>
-                <span asp-validation-for="WorkTask.Deadline" class="text-danger"></span>
+@{
+    ViewData["Title"] = "Create Task";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+
+            <h1 class="mb-1">Create Task</h1>
+            <p class="text-muted mb-4">Add a new task to a project.</p>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="WorkTask.Title" class="form-label"></label>
+                            <span class="text-danger">*</span>
+                            <input asp-for="WorkTask.Title" class="form-control" />
+                            <span asp-validation-for="WorkTask.Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="WorkTask.Description" class="form-label"></label>
+                            <input asp-for="WorkTask.Description" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="WorkTask.Deadline" class="form-label"></label>
+                            <span class="text-danger">*</span>
+                            <input asp-for="WorkTask.Deadline" type="date" class="form-control" />
+                            <span asp-validation-for="WorkTask.Deadline" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="WorkTask.ProjectId" class="form-label"></label>
+                            <span class="text-danger">*</span>
+                            <select asp-for="WorkTask.ProjectId"
+                                    class="form-select"
+                                    asp-items="ViewBag.ProjectId">
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="WorkTask.StatusId" class="form-label"></label>
+                            <span class="text-danger">*</span>
+                            <select asp-for="WorkTask.StatusId"
+                                    class="form-select"
+                                    asp-items="ViewBag.StatusId">
+                            </select>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-page="Index" class="btn btn-outline-secondary">
+                                Back to list
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                Create
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
-            <div class="form-group">
-                <span class="text-danger">*</span>
-                <label asp-for="WorkTask.ProjectId" class="control-label"></label>
-                <select asp-for="WorkTask.ProjectId" class="form-control" asp-items="ViewBag.ProjectId" aria-required="true"></select>
-            </div>
-
-            <div class="form-group">
-                <span class="text-danger">*</span>
-                <label asp-for="WorkTask.StatusId" class="control-label"></label>
-                <select asp-for="WorkTask.StatusId" class="form-control" asp-items="ViewBag.StatusId" aria-required="true"></select>
-            </div>           
-
-
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
