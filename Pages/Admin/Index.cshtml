@@ -1,0 +1,153 @@
+﻿@page
+@model FreelancePM.Pages.Admin.IndexModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container mt-5">
+
+    <div class="mb-4">
+        <h1 class="fw-semibold">Admin Dashboard</h1>
+        <p class="text-muted">System-wide overview and key metrics.</p>
+    </div>
+
+    <!-- KPI -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Total Users</p>
+                    <h3 class="fw-bold">@Model.TotalUsers</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Active Users</p>
+                    <h3 class="fw-bold">@Model.ActiveUsers</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Total Projects</p>
+                    <h3 class="fw-bold">@Model.TotalProjects</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Active Projects</p>
+                    <h3 class="fw-bold">@Model.ActiveProjects</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHART -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="mb-3 text-muted">Project evolution (last 6 months)</h6>
+                    <canvas id="projectsLineChart" height="90"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLES -->
+    <div class="row g-4">
+
+        <!-- Last users -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="mb-3 text-muted">Last registered users</h6>
+                    <table class="table table-sm mb-0">
+                        <thead class="text-muted">
+                            <tr>
+                                <th>Email</th>
+                                <th>Username</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.LastUsers)
+                            {
+                                <tr>
+                                    <td>@user.Email</td>
+                                    <td>@user.UserName</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent projects -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="mb-3 text-muted">Recent projects</h6>
+                    <table class="table table-sm mb-0">
+                        <thead class="text-muted">
+                            <tr>
+                                <th>Name</th>
+                                <th>Client</th>
+                                <th>Deadline</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var project in Model.RecentProjects)
+                            {
+                                <tr>
+                                    <td>@project.Name</td>
+                                    <td>@project.Client?.Name</td>
+                                    <td>@project.Deadline.ToString("dd/MM/yyyy")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('projectsLineChart');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ProjectChartLabels)),
+                datasets: [{
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ProjectChartValues)),
+                    borderColor: 'rgba(120,120,120,0.9)',
+                    backgroundColor: 'rgba(120,120,120,0.1)',
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { precision: 0 } }
+                }
+            }
+        });
+    </script>
+}

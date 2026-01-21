@@ -1,15 +1,16 @@
 ﻿@page
+@inject Microsoft.Extensions.Localization.IStringLocalizer<FreelancePM.Resources.SharedResources> Localizer
 @model FreelancePM.Pages.Clients.IndexModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Clients</h1>
+<h1>@Model.ClientsText</h1>
 
 <!-- Create Button -->
 <a asp-page="Create" class="btn btn-outline-dark">
-    ➕ Create Client
+    ➕ @Model.CreateClientText
 </a>
 <br/>
 <div class="mb-3 d-flex justify-content-between align-items-end">   
@@ -19,14 +20,16 @@
                name="SearchTerm"
                value="@Model.SearchTerm"
                class="form-control"
-               placeholder="Search by name or company..." />
+               placeholder="@Localizer["SearchClient"]" />
 
         <button type="submit" class="btn btn-primary">
-            🔍 Search
+            🔍 @Localizer["Search"]
+
         </button>
 
         <a asp-page="./Index" class="btn btn-outline-secondary">
-            ♻ Reset
+            ♻ @Localizer["Reset"]
+
         </a>
     </form>
 </div>
@@ -35,12 +38,12 @@
 <table class="table table-hover align-middle">
     <thead class="table-light">
         <tr>
-            <th>Name</th>
-            <th>Contact</th>
-            <th>Company</th>
-            <th>Projects Count</th>
-            <th>Notes</th>
-            <th>Actions</th>
+            <th>@Localizer["Name"]</th>
+            <th>@Localizer["Contact"]</th>
+            <th>@Localizer["Company"]</th>
+            <th>@Localizer["Projects Count"]</th>
+            <th>@Localizer["Notes"]</th>
+            <th>@Localizer["Actions"]</th>
         </tr>
     </thead>
 
@@ -80,7 +83,7 @@
                         <a asp-page="/Projects/Index"
                            asp-route-FilterClientId="@client.Id"
                            class="badge bg-info text-dark text-decoration-none">
-                            @client.Projects.Count project(s)
+                            @client.Projects.Count @Localizer["Projects"]
                         </a>
                     }
                     else
@@ -102,26 +105,29 @@
                         <a asp-page="/Projects/Index"
                            asp-route-FilterClientId="@client.Id"
                            class="btn btn-outline-dark">
-                            📁 Projects
+                            📁 @Localizer["Projects"]
                         </a>
 
                         <a asp-page="./Edit"
                            asp-route-id="@client.Id"
                            class="btn btn-outline-primary">
-                            ✏ Edit
+                            ✏ @Localizer["Edit"]
+
                         </a>
 
                         <a asp-page="./Details"
                            asp-route-id="@client.Id"
                            class="btn btn-outline-secondary">
-                            🔍 Details
+                            🔍 @Localizer["Details"]
+
                         </a>
 
                         <button type="button"
                                 class="btn btn-outline-danger"
                                 data-bs-toggle="modal"
                                 data-bs-target="#deleteModal-@client.Id">
-                            🗑 Delete
+                            🗑 @Localizer["Delete"]
+
                         </button>
                     </div>
 
@@ -133,15 +139,14 @@
                             <div class="modal-content">
 
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Confirm Delete</h5>
+                                    <h5 class="modal-title">@Localizer["ConfirmDelete"]</h5>
                                     <button type="button"
                                             class="btn-close"
                                             data-bs-dismiss="modal"></button>
                                 </div>
 
                                 <div class="modal-body">
-                                    Are you sure you want to delete client
-                                    <strong>@client.Name</strong>?
+                                    @Localizer["DeleteClientQuestion", client.Name]
                                 </div>
 
                                 <div class="modal-footer">

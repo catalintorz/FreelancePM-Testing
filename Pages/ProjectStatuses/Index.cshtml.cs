@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using FreelancePM.Data;
 using FreelancePM.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FreelancePM.Pages.ProjectStatuses
 {
+    [Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
         private readonly FreelancePM.Data.ApplicationDbContext _context;

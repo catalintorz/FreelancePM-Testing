@@ -1,10 +1,138 @@
 ﻿@page
-@model IndexModel
+@model FreelancePM.Pages.IndexModel
 @{
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="text-center my-5">
+    <h1 class="display-4">Welcome to FreelancePM</h1>
+
+    @if (!User.Identity?.IsAuthenticated ?? true)
+    {
+        <p class="lead mb-5">
+            Manage your projects and tasks efficiently. Join thousands of freelancers who are already using FreelancePM.
+        </p>
+
+        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-primary btn-lg me-3">Get Started</a>
+        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary btn-lg">Login</a>
+
+        <!-- Public statistics section -->
+        <div class="row mt-5 g-4 text-center">
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 p-3 h-100" style="background-color:#C1E1C1; color:#1B262C;">
+                    <h5 class="mb-2">Total Users</h5>
+                    <p class="display-5 mb-0">@Model.PublicTotalUsers</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 p-3 h-100" style="background-color:#FFD6D6; color:#1B262C;">
+                    <h5 class="mb-2">Projects Managed</h5>
+                    <p class="display-5 mb-0">@Model.PublicTotalProjects</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 p-3 h-100" style="background-color:#FFE5B4; color:#1B262C;">
+                    <h5 class="mb-2">Tasks Completed</h5>
+                    <p class="display-5 mb-0">@Model.PublicTotalTasks</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features / Benefits -->
+        <div class="row mt-5 g-4 text-center">
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0 p-3 h-100" style="background-color:#B5EAEA; color:#1B262C;">
+                    <h5>Easy Project Management</h5>
+                    <p>Keep track of all your projects in one place.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0 p-3 h-100" style="background-color:#A3CEF1; color:#1B262C;">
+                    <h5>Task Tracking</h5>
+                    <p>See what’s due, active, or overdue at a glance.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0 p-3 h-100" style="background-color:#FFD6D6; color:#1B262C;">
+                    <h5>Client Management</h5>
+                    <p>Manage client info and projects effortlessly.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0 p-3 h-100" style="background-color:#FFE5B4; color:#1B262C;">
+                    <h5>Analytics & Reports</h5>
+                    <p>Track your productivity with charts and insights.</p>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p class="lead">
+            Hello <span class="fw-bold">@Model.Username</span>! Here's a quick overview.
+        </p>
+
+        @if (Model.IsAdmin)
+        {
+            <div class="alert alert-info">
+                You are logged in as <strong>Admin</strong>. Manage users and system settings from your dashboard.
+            </div>
+
+            <div class="row mt-4 g-3">
+                <div class="col-md-6 col-lg-3">
+                    <a asp-page="/Admin/Users" class="text-decoration-none">
+                        <div class="card shadow-sm border-0 text-center p-3 h-100" style="background-color:#A3CEF1; color:#1B262C; cursor:pointer;">
+                            <h5>Total Users</h5>
+                            <p class="display-5 mb-0">@Model.TotalUsers</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <a asp-page="/Admin/Projects" class="text-decoration-none">
+                        <div class="card shadow-sm border-0 text-center p-3 h-100" style="background-color:#B5EAEA; color:#1B262C; cursor:pointer;">
+                            <h5>Active Projects</h5>
+                            <p class="display-5 mb-0">@Model.TotalActiveProjects</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row mt-4 g-3">
+                <div class="col-md-6 col-lg-3">
+                    <a asp-page="/Clients/Index" class="text-decoration-none">
+                        <div class="card shadow-sm border-0 text-center p-3 h-100" style="background-color:#FFE5B4; color:#1B262C; cursor:pointer;">
+                            <h5>Clients</h5>
+                            <p class="display-5 mb-0">@Model.ClientsCount</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <a asp-page="/Projects/Index" class="text-decoration-none">
+                        <div class="card shadow-sm border-0 text-center p-3 h-100" style="background-color:#C1E1C1; color:#1B262C; cursor:pointer;">
+                            <h5>Projects</h5>
+                            <p class="display-5 mb-0">@Model.ProjectsCount</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <a asp-page="/ProjectTasks/Index" class="text-decoration-none">
+                        <div class="card shadow-sm border-0 text-center p-3 h-100" style="background-color:#FFD6D6; color:#1B262C; cursor:pointer;">
+                            <h5>Active Tasks</h5>
+                            <p class="display-5 mb-0">@Model.ActiveTasksCount</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <a asp-page="/ProjectTasks/Index" class="text-decoration-none">
+                        <div class="card shadow-sm border-0 text-center p-3 h-100" style="background-color:#FFB6B9; color:#1B262C; cursor:pointer;">
+                            <h5>Overdue Tasks</h5>
+                            <p class="display-5 mb-0">@Model.OverdueTasksCount</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        }
+    }
 </div>

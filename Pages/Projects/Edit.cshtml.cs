@@ -1,5 +1,6 @@
 ﻿using FreelancePM.Data;
 using FreelancePM.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace FreelancePM.Pages.Projects
 {
+    [Authorize]
     public class EditModel : PageModel
     {
         private readonly FreelancePM.Data.ApplicationDbContext _context;

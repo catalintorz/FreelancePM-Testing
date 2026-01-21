@@ -12,10 +12,12 @@ namespace FreelancePM.Models
 
         [Required(ErrorMessage = "Numele clientului este obligatoriu")]
         [StringLength(100)]
+        [Display(Name = "Name")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Emailul este obligatoriu")]
         [EmailAddress(ErrorMessage = "Email invalid")]
+        [Display(Name = "Email")]
         public string Email { get; set; }
 
         [Phone(ErrorMessage = "Telefon invalid")]
