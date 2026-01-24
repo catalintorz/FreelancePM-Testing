@@ -40,7 +40,7 @@ namespace FreelancePM.Pages
 
         public async Task OnGetAsync()
         {
-            // Public statistics (for landing page)
+            // Statistici pentru landing page (no login)
             PublicTotalUsers = Math.Max(await _userManager.Users.CountAsync(), 1200);
             PublicTotalProjects = Math.Max(await _context.Projects.CountAsync(), 500);
             PublicTotalTasks = Math.Max(await _context.WorkTasks.CountAsync(), 3000);

@@ -7,7 +7,7 @@ namespace FreelancePM.Models
 
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Numele statusului este obligatoriu")]
+        [Required(ErrorMessage = "Status name is required")]
         [StringLength(50)]
         public string Name { get; set; }
 

@@ -1,5 +1,4 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer Localizer
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,19 +22,19 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (!User.IsInRole("Admin"))
+                        @if (!User.IsInRole("Admin")) // Nu apare pentru admin
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Clients/Index">@Localizer["Clients"]</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Clients/Index">Clients</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Projects/Index">@Localizer["Projects"]</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Projects/Index">Projects</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/ProjectTasks/Index">ProjectTasks</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/ProjectTasks/Index">Tasks</a>
                             </li>                       
                         }
-                        @if (User.IsInRole("Admin"))
+                        @if (User.IsInRole("Admin")) // Apare doar pentru admin
                         {
                             <a asp-page="/ProjectStatuses/Index" class="nav-link">
                                 Statuses

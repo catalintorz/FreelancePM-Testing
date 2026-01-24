@@ -9,14 +9,14 @@
         <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
     </li> -->
     
-     @if (User.IsInRole("Admin"))
+     @if (User.IsInRole("Admin")) // Dahsboard Admin
      {
         <li class="nav-item">
             <a class="nav-link" asp-page="/Admin/Index">
                 Admin Dashboard
             </a>
         </li>
-        } else
+        } else // Dashboard User
         {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-page="/Dashboard/Index">Dashboard</a>

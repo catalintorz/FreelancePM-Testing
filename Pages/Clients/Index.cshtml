@@ -1,49 +1,61 @@
 ﻿@page
-@inject Microsoft.Extensions.Localization.IStringLocalizer<FreelancePM.Resources.SharedResources> Localizer
 @model FreelancePM.Pages.Clients.IndexModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>@Model.ClientsText</h1>
+<h1 class="mb-4">Clients List</h1>
 
-<!-- Create Button -->
-<a asp-page="Create" class="btn btn-outline-dark">
-    ➕ @Model.CreateClientText
+<a asp-page="Create" class="btn btn-outline-dark mb-3">
+    ➕ Create Client
 </a>
-<br/>
-<div class="mb-3 d-flex justify-content-between align-items-end">   
-    <!-- Search -->
-    <form method="get" class="d-flex gap-2">
-        <input type="text"
-               name="SearchTerm"
-               value="@Model.SearchTerm"
-               class="form-control"
-               placeholder="@Localizer["SearchClient"]" />
 
-        <button type="submit" class="btn btn-primary">
-            🔍 @Localizer["Search"]
+<!-- SEARCH BAR -->
+<div class="card mb-3 shadow-sm">
+    <div class="card-body py-2">
+        <form method="get">
+            <div class="row g-2 align-items-center">
 
-        </button>
+                <!-- SEARCH -->
+                <div class="col-md-8">
+                    <input type="text"
+                           name="SearchTerm"
+                           value="@Model.SearchTerm"
+                           class="form-control form-control-sm"
+                           placeholder="🔍 Search clients..." />
+                </div>
 
-        <a asp-page="./Index" class="btn btn-outline-secondary">
-            ♻ @Localizer["Reset"]
+                <!-- BUTTONS -->
+                <div class="col-md-4 d-flex gap-2">
+                    <button type="submit"
+                            class="btn btn-primary btn-sm w-100">
+                        🔍 Search
+                    </button>
 
-        </a>
-    </form>
+                    <a asp-page="./Index"
+                       class="btn btn-outline-secondary btn-sm w-100">
+                        ♻ Reset
+                    </a>
+                </div>
+
+            </div>
+        </form>
+    </div>
 </div>
+
+
 
 <!-- TABEL CLIENTI -->
 <table class="table table-hover align-middle">
     <thead class="table-light">
         <tr>
-            <th>@Localizer["Name"]</th>
-            <th>@Localizer["Contact"]</th>
-            <th>@Localizer["Company"]</th>
-            <th>@Localizer["Projects Count"]</th>
-            <th>@Localizer["Notes"]</th>
-            <th>@Localizer["Actions"]</th>
+            <th>Name</th>
+            <th>Contact</th>
+            <th>Company</th>
+            <th>Projects Count</th>
+            <th>Notes</th>
+            <th>Actions</th>
         </tr>
     </thead>
 
@@ -83,7 +95,7 @@
                         <a asp-page="/Projects/Index"
                            asp-route-FilterClientId="@client.Id"
                            class="badge bg-info text-dark text-decoration-none">
-                            @client.Projects.Count @Localizer["Projects"]
+                            @client.Projects.Count Projects
                         </a>
                     }
                     else
@@ -105,20 +117,20 @@
                         <a asp-page="/Projects/Index"
                            asp-route-FilterClientId="@client.Id"
                            class="btn btn-outline-dark">
-                            📁 @Localizer["Projects"]
+                            📁 Projects
                         </a>
 
                         <a asp-page="./Edit"
                            asp-route-id="@client.Id"
                            class="btn btn-outline-primary">
-                            ✏ @Localizer["Edit"]
+                            ✏ Edit
 
                         </a>
 
                         <a asp-page="./Details"
                            asp-route-id="@client.Id"
                            class="btn btn-outline-secondary">
-                            🔍 @Localizer["Details"]
+                            🔍 Details
 
                         </a>
 
@@ -126,7 +138,7 @@
                                 class="btn btn-outline-danger"
                                 data-bs-toggle="modal"
                                 data-bs-target="#deleteModal-@client.Id">
-                            🗑 @Localizer["Delete"]
+                            🗑 Delete
 
                         </button>
                     </div>
@@ -139,19 +151,20 @@
                             <div class="modal-content">
 
                                 <div class="modal-header">
-                                    <h5 class="modal-title">@Localizer["ConfirmDelete"]</h5>
+                                    <h5 class="modal-title">Confirm delete</h5>
                                     <button type="button"
                                             class="btn-close"
                                             data-bs-dismiss="modal"></button>
                                 </div>
 
                                 <div class="modal-body">
-                                    @Localizer["DeleteClientQuestion", client.Name]
+                                    Are you sure you want to delete
+                                    <strong>@client.Name</strong>?
                                 </div>
 
                                 <div class="modal-footer">
                                     <button type="button"
-                                            class="btn btn-secondary"
+                                            class="btn btn-outline-secondary"
                                             data-bs-dismiss="modal">
                                         Cancel
                                     </button>
