@@ -27,11 +27,11 @@ namespace FreelancePM.Pages.Admin
         public int TotalProjects { get; set; }
         public int ActiveProjects { get; set; }
 
-        // Chart - projects per month
+        // Chart - proiecte pe luna
         public List<string> ProjectChartLabels { get; set; } = new();
         public List<int> ProjectChartValues { get; set; } = new();
 
-        // Last users (Identity standard)
+        // Last users
         public List<IdentityUser> LastUsers { get; set; } = new();
 
         // Recent projects
@@ -39,7 +39,7 @@ namespace FreelancePM.Pages.Admin
 
         public async Task OnGetAsync()
         {
-            // USERS
+            // USERS - numarul total de useri
             TotalUsers = _userManager.Users.Count();
 
             ActiveUsers = await _context.WorkTasks
@@ -47,27 +47,27 @@ namespace FreelancePM.Pages.Admin
                 .Distinct()
                 .CountAsync();
 
-            // PROJECTS
+            // PROJECTS - numarul total de proiecte
             TotalProjects = await _context.Projects.CountAsync();
 
             ActiveProjects = await _context.Projects
                 .Where(p => p.Deadline >= DateTime.Today)
                 .CountAsync();
 
-            // LAST USERS (best possible with Identity standard)
+            // LAST USERS - ultimii 5 useri
             LastUsers = await _userManager.Users
                 .OrderByDescending(u => u.Id)
                 .Take(5)
                 .ToListAsync();
 
-            // RECENT PROJECTS
+            // RECENT PROJECTS - ultimele 5 proiecte
             RecentProjects = await _context.Projects
                 .Include(p => p.Client)
                 .OrderByDescending(p => p.StartDate)
                 .Take(5)
                 .ToListAsync();
 
-            // PROJECT CHART - last 6 months
+            // PROJECT CHART - ultimele 6 luni
             var sixMonthsAgo = DateTime.Today.AddMonths(-5);
 
             var projectsByMonthRaw = await _context.Projects

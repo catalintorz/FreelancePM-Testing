@@ -16,35 +16,35 @@ namespace FreelancePM.Data
         {
             base.OnModelCreating(builder);
 
-            // 🔹 Client -> Projects (NO CASCADE)
+            // Client - Projects
             builder.Entity<Project>()
                 .HasOne(p => p.Client)
                 .WithMany(c => c.Projects)
                 .HasForeignKey(p => p.ClientId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // 🔹 Project -> WorkTasks (CASCADE OK)
+            // Project - WorkTasks
             builder.Entity<WorkTask>()
                 .HasOne(t => t.Project)
                 .WithMany(p => p.WorkTasks)
                 .HasForeignKey(t => t.ProjectId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // 🔹 User -> Clients (NO CASCADE)
+            // User - Clients
             builder.Entity<Client>()
                 .HasOne(c => c.User)
                 .WithMany()
                 .HasForeignKey(c => c.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // 🔹 User -> Projects (NO CASCADE)
+            // User - Projects
             builder.Entity<Project>()
                 .HasOne(p => p.User)
                 .WithMany()
                 .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // 🔹 User -> WorkTasks (NO CASCADE)
+            // User - WorkTasks
             builder.Entity<WorkTask>()
                 .HasOne(t => t.User)
                 .WithMany()

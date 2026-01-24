@@ -109,7 +109,7 @@ namespace FreelancePM.Pages.ProjectTasks
                 return NotFound();
 
 
-            // Cautam statusul "Completed"
+            // Cautam statusul Completed
             var completedStatus = await _context.Statuses
                 .FirstOrDefaultAsync(s => s.Name == "Completed");
 

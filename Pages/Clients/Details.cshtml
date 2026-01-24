@@ -1,38 +1,37 @@
 ﻿@page
-@inject Microsoft.Extensions.Localization.IStringLocalizer<FreelancePM.Resources.SharedResources> Localizer
 @model FreelancePM.Pages.Clients.DetailsModel
 
 @{
-    ViewData["Title"] = Localizer["ClientDetails"];
+    ViewData["Title"] = "Details";
 }
 
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8">
 
-            <h1 class="mb-1">@Localizer["ClientDetails"]</h1>
-            <p class="text-muted mb-4">@Localizer["ClientDetailsDescription"]</p>
+            <h1 class="mb-1">Client Details</h1>
+            <p class="text-muted mb-4">Description</p>
 
             <div class="card shadow-sm">
                 <div class="card-body">
 
                     <dl class="row mb-0">
                         <dt class="col-sm-4 text-muted">
-                            @Localizer["Name"]
+                            Name
                         </dt>
                         <dd class="col-sm-8">
                             @Model.Client.Name
                         </dd>
 
                         <dt class="col-sm-4 text-muted">
-                            @Localizer["Email"]
+                            Email
                         </dt>
                         <dd class="col-sm-8">
                             @Model.Client.Email
                         </dd>
 
                         <dt class="col-sm-4 text-muted">
-                            @Localizer["Phone"]
+                            Phone
                         </dt>
                         <dd class="col-sm-8">
                             @(string.IsNullOrWhiteSpace(Model.Client.Phone)
@@ -41,7 +40,7 @@
                         </dd>
 
                         <dt class="col-sm-4 text-muted">
-                            @Localizer["Company"]
+                            Company
                         </dt>
                         <dd class="col-sm-8">
                             @(string.IsNullOrWhiteSpace(Model.Client.Company)
@@ -50,7 +49,7 @@
                         </dd>
 
                         <dt class="col-sm-4 text-muted">
-                            @Localizer["Notes"]
+                            Notes
                         </dt>
                         <dd class="col-sm-8">
                             @(string.IsNullOrWhiteSpace(Model.Client.Notes)
@@ -61,13 +60,13 @@
 
                     <div class="d-flex justify-content-between mt-4">
                         <a asp-page="./Index" class="btn btn-outline-secondary">
-                            @Localizer["BackToList"]
+                            BackToList
                         </a>
 
                         <a asp-page="./Edit"
                            asp-route-id="@Model.Client.Id"
                            class="btn btn-primary">
-                            @Localizer["Edit"]
+                            Edit
                         </a>
                     </div>
 

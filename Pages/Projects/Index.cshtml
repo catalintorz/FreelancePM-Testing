@@ -13,47 +13,52 @@
 </a>
 <br/>
 
-<!-- FILTER -->
-<div class="mb-3 d-flex justify-content-between align-items-end">
+<!-- FILTER BAR -->
+<div class="card mb-3 shadow-sm">
+    <div class="card-body py-2">
+        <form method="get">
+            <div class="row g-2 align-items-center">
 
-    <form method="get" class="d-flex gap-2 align-items-end">
+                <!-- SEARCH -->
+                <div class="col-md-4">
+                    <input type="text"
+                           name="SearchTerm"
+                           value="@Model.SearchTerm"
+                           class="form-control form-control-sm"
+                           placeholder="🔍 Search projects..." />
+                </div>
 
-        <!-- SEARCH -->
-        <div>
-            <label class="form-label">Search</label>
-            <input type="text"
-                   name="SearchTerm"
-                   value="@Model.SearchTerm"
-                   class="form-control"
-                   placeholder="Search project..." />
-        </div>
+                <!-- CLIENT DROPDOWN -->
+                <div class="col-md-4">
+                    <select name="FilterClientId"
+                            class="form-select form-select-sm">
+                        <option value="">📁 All Clients</option>
+                        @foreach (var client in Model.ClientsList)
+                        {
+                            <option value="@client.Value"
+                                    selected="@(client.Value == Model.FilterClientId?.ToString())">
+                                @client.Text
+                            </option>
+                        }
+                    </select>
+                </div>
 
-        <!-- CLIENT DROPDOWN -->
-        <div>
-            <label class="form-label">Client</label>
-            <select name="FilterClientId"
-                    class="form-select">
-                <option value="">📁 All clients</option>
-                @foreach (var client in Model.ClientsList)
-                {
-                    <option value="@client.Value"
-                            selected="@(client.Value == Model.FilterClientId?.ToString())">
-                        @client.Text
-                    </option>
-                }
-            </select>
-        </div>
+                <!-- BUTTONS -->
+                <div class="col-md-4 d-flex gap-2">
+                    <button type="submit"
+                            class="btn btn-primary btn-sm w-100">
+                        🔍 Filter
+                    </button>
 
-        <button type="submit" class="btn btn-primary mb-1">
-            🔍 Filter
-        </button>
+                    <a asp-page="./Index"
+                       class="btn btn-outline-secondary btn-sm w-100">
+                        ♻ Reset
+                    </a>
+                </div>
 
-        <a asp-page="./Index"
-           class="btn btn-outline-secondary mb-1">
-            ♻ Reset
-        </a>
-
-    </form>
+            </div>
+        </form>
+    </div>
 </div>
 
 

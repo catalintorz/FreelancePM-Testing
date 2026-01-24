@@ -24,7 +24,7 @@ namespace FreelancePM.Pages.Dashboard
         public int TasksCount { get; set; }
         public int ActiveTasksCount { get; set; }
 
-        // Charts
+        // Grafice
         public List<string> ProjectLabels { get; set; } = new();
         public List<int> ProjectValues { get; set; } = new();
         public List<string> ProjectColors { get; set; } = new();
@@ -82,20 +82,8 @@ namespace FreelancePM.Pages.Dashboard
                 .OrderBy(t => t.Deadline)
                 .ToList();
 
-            // Chart 1 - Projects (Active vs Completed)
-            var projects = _context.Projects
-                .Where(p => p.UserId == userId)
-                .ToList();
 
-            ProjectLabels = new List<string> { "Active", "Completed" };
-            ProjectValues = new List<int>
-            {
-                projects.Count(p => p.Deadline >= now),
-                projects.Count(p => p.Deadline < now)
-            };
-            ProjectColors = new List<string> { "rgba(54, 162, 235, 0.8)", "rgba(75, 192, 192, 0.8)" };
-
-            // Chart 2 - Tasks by Status
+            // Grafic Taskuri
             var tasks = _context.WorkTasks
                 .Where(t => t.UserId == userId)
                 .Include(t => t.Status)

@@ -1,17 +1,17 @@
 ﻿@page
-@inject Microsoft.Extensions.Localization.IStringLocalizer<FreelancePM.Resources.SharedResources> Localizer
+
 @model FreelancePM.Pages.Clients.CreateModel
 
 @{
-    ViewData["Title"] = Localizer["CreateClient"];
+    ViewData["Title"] = "Create Client";
 }
 
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8">
 
-            <h1 class="mb-1">@Localizer["CreateClient"]</h1>
-            <p class="text-muted mb-4">@Localizer["CreateClientDescription"]</p>
+            <h1 class="mb-1">Create Client</h1>
+            <p class="text-muted mb-4">Description</p>
 
             <div class="card shadow-sm">
                 <div class="card-body">
@@ -20,7 +20,7 @@
 
                         <div class="mb-3">
                             <label asp-for="Client.Name" class="form-label">
-                                @Localizer["Name"] <span class="text-danger">*</span>
+                                Name <span class="text-danger">*</span>
                             </label>
                             <input asp-for="Client.Name" class="form-control" />
                             <span asp-validation-for="Client.Name" class="text-danger"></span>
@@ -28,7 +28,7 @@
 
                         <div class="mb-3">
                             <label asp-for="Client.Email" class="form-label">
-                                @Localizer["Email"] <span class="text-danger">*</span>
+                                Email <span class="text-danger">*</span>
                             </label>
                             <input asp-for="Client.Email" class="form-control" />
                             <span asp-validation-for="Client.Email" class="text-danger"></span>
@@ -54,11 +54,11 @@
 
                         <div class="d-flex justify-content-between mt-4">
                             <a asp-page="Index" class="btn btn-outline-secondary">
-                                @Localizer["Cancel"]
+                                Cancel
                             </a>
 
                             <button type="submit" class="btn btn-primary">
-                                @Localizer["Save"]
+                                Save
                             </button>
                         </div>
                     </form>

@@ -85,12 +85,8 @@
     </div>
 </div>
 
-<!-- Charts -->
+<!-- Grafice -->
 <div class="row">
-    <div class="col-md-6">
-        <h5>Projects Overview</h5>
-        <canvas id="projectsChart" height="250"></canvas>
-    </div>
     <div class="col-md-6">
         <h5>Tasks by Status</h5>
         <canvas id="tasksChart" height="250"></canvas>
@@ -99,21 +95,7 @@
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Projects chart
-        new Chart(document.getElementById('projectsChart').getContext('2d'), {
-            type: 'pie',
-            data: {
-                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ProjectLabels)),
-                datasets: [{
-                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ProjectValues)),
-                    backgroundColor: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ProjectColors)),
-                    borderWidth: 0
-                }]
-            },
-            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
-        });
-
+    <script>      
         // Tasks chart
         new Chart(document.getElementById('tasksChart').getContext('2d'), {
             type: 'doughnut',

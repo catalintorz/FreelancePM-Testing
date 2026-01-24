@@ -9,7 +9,7 @@ namespace FreelancePM.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Numele proiectului este obligatoriu")]
+        [Required(ErrorMessage = "Project name is required")]
         [StringLength(150)]
         public string Name { get; set; }
 
@@ -17,15 +17,15 @@ namespace FreelancePM.Models
         public string Description { get; set; }
 
         [DataType(DataType.Date)]
-        [Display(Name = "Data start")]
+        [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; } = DateTime.Now;
 
-        [Required(ErrorMessage = "Deadline-ul este obligatoriu")]
+        [Required(ErrorMessage = "Deadline is required")]
         [DataType(DataType.Date)]
         [Display(Name = "Deadline")]
         public DateTime Deadline { get; set; }
 
-        [Range(0, double.MaxValue, ErrorMessage = "Bugetul trebuie să fie pozitiv")]
+        [Range(0, double.MaxValue, ErrorMessage = "Budget must be a positive value")]
         public decimal Budget { get; set; }
 
         //  Client
